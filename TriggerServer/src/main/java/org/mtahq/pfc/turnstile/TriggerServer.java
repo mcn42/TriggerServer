@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,8 @@ public class TriggerServer {
 
     private PiPulser ppulse = new PiPulser();
     private Server server = null;
+    
+    private UUID currentUuid = UUID.randomUUID();
 
     public TriggerServer() {
         super();
@@ -40,9 +43,12 @@ public class TriggerServer {
 
         ContextHandler contextFR = new ContextHandler("/accept");
         contextFR.setHandler(new AcceptHandler());
+        
+        ContextHandler context3 = new ContextHandler("/uuid");
+        context3.setHandler(new UUIDHandler());
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers(new Handler[] { context, contextFR });
+        contexts.setHandlers(new Handler[] { context, contextFR,context3 });
 
         server.setHandler(contexts);
     }
@@ -75,6 +81,14 @@ public class TriggerServer {
             //                httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
             //                return;
             //            }
+            
+            //  Accept only requests containig the UUID as a paramter
+            String uuid = httpServletRequest.getParameter("UUID");
+            if(uuid == null || !uuid.equals(currentUuid.toString())) {
+                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+            currentUuid = UUID.randomUUID();
             Utils.getLogger().info("Accept request received");
             ppulse.sendOneSequence();
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -94,6 +108,23 @@ public class TriggerServer {
             PrintWriter out = httpServletResponse.getWriter();
 
             out.println("<h1>The Turnstile Trigger Server is Running...</h1>");
+
+            request.setHandled(true);
+        }
+    }
+    
+    class UUIDHandler extends AbstractHandler {
+
+        @Override
+        public void handle(String string, Request request, HttpServletRequest httpServletRequest,
+                           HttpServletResponse httpServletResponse) throws IOException, ServletException {
+
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            httpServletResponse.setContentType("text/plain; charset=utf-8");
+
+            PrintWriter out = httpServletResponse.getWriter();
+
+            out.println(currentUuid.toString());
 
             request.setHandled(true);
         }
