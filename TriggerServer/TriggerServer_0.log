@@ -1,0 +1,4 @@
+Sep 15, 2016 1:21:39 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Sep 15, 2016 1:22:22 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
