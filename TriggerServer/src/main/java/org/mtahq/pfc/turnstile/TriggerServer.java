@@ -158,7 +158,7 @@ public class TriggerServer {
             lockTimer.schedule(new LockoutTask(), 0L);
 
             Utils.getLogger().info("Accept request received");
-            ppulse.sendOneSequence();
+            ppulse.sendTurnstileSequence();
             //Toolkit.getDefaultToolkit().beep();
             //playSound();
 
