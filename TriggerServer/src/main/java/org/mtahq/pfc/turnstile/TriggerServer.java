@@ -31,11 +31,11 @@ public class TriggerServer {
     private static final int SERVER_PORT = 8080;
     private static final long LOCKOUT_PERIOD = 7000L;
 
-    //private PiPulser ppulse = new PiPulser();
+    private PiPulser ppulse = new PiPulser(true);
     private Server server = null;
 
     private UUID currentUuid = UUID.randomUUID();
-    private Set<UUID> uuidSet = new TreeSet<UUID>();
+    private Set<String> uuidSet = new TreeSet<String>();
     private AtomicBoolean locked = new AtomicBoolean(false);
     private Timer lockTimer = new Timer();
 
@@ -76,6 +76,7 @@ public class TriggerServer {
 
     public void start() {
         try {
+            this.changeUUID();
             File f = new File(".");
             Utils.getLogger().info(String.format("Base directory '%s'", f.getAbsolutePath()));
             Utils.getLogger().info("Server is starting...");
@@ -114,13 +115,13 @@ public class TriggerServer {
 
     private void changeUUID() {
         synchronized (this) {
-            if (!this.uuidSet.remove(this.currentUuid)) {
+            if (!this.uuidSet.remove(this.currentUuid.toString())) {
                 Utils.getLogger().warning("UUID not found for removal: " + this.currentUuid);
             }
 
             this.currentUuid = UUID.randomUUID();
             Utils.getLogger().info(String.format("Current UUID changed to %s", this.currentUuid));
-            this.uuidSet.add(this.currentUuid);
+            this.uuidSet.add(this.currentUuid.toString());
         }
     }
 
@@ -135,24 +136,13 @@ public class TriggerServer {
                 request.setHandled(true);
                 return;
             }
-            //      Accept only POSTs
-            //            if (!request.getMethod().equalsIgnoreCase("POST")) {
-            //                httpServletResponse.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            //                return;
-            //            }
-
-            //  Accept only requests containig the UUID as a paramter
-            //            String uuid = httpServletRequest.getParameter("UUID");
-            //            if (uuid == null || !uuid.equals(currentUuid.toString())) {
-            //                httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            //                return;
-            //            }
             lockTimer.schedule(new LockoutTask(), 0L);
 
             Utils.getLogger().info("Accept request received");
-            //ppulse.sendTurnstileSequence();
+            ppulse.sendFareboxSequence();
+            changeUUID();
             //Toolkit.getDefaultToolkit().beep();
-            playSound();
+            //playSound();
 
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             request.setHandled(true);

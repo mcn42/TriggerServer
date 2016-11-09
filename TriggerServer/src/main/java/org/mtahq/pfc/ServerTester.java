@@ -22,7 +22,7 @@ public class ServerTester {
     private int maxPollCount = 100;
     private int minimumTriggerDelaySecs = 5;
     private int maximumTriggerVariationSecs = 7;
-    private String host = "localhost";
+    private String host = "10.52.36.89";
     private String port = "8080";
     
     private Logger log = Logger.getLogger("org.mtahq.pfc");
@@ -41,6 +41,7 @@ public class ServerTester {
     public static void main(String[] args) {
         ServerTester serverTester = new ServerTester();
         serverTester.runOnce();
+        
     }
 
     public void runOnce() {
@@ -108,7 +109,6 @@ public class ServerTester {
 
     private void sendAccept() throws MalformedURLException, IOException {
         URL url = buildUrl("accept/");
-        this.uuid = null;
         this.conn = (HttpURLConnection) url.openConnection();
         log.info(String.format("Sentr trigger request to %s, response was '%s'", url.toString(), conn.getResponseCode()));
         this.conn.disconnect();
@@ -117,6 +117,12 @@ public class ServerTester {
     private void finish() {
         if(pt != null) pt.cancel();
         log.info("Test completed");
+        try {
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+            //  no op
+        }
+        System.exit(0);
     }
 
     private URL buildUrl(String uri) throws MalformedURLException {
