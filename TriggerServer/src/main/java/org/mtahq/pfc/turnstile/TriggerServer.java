@@ -1,12 +1,8 @@
 package org.mtahq.pfc.turnstile;
 
-import java.awt.Toolkit;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.io.PrintWriter;
-
 
 import java.util.Set;
 import java.util.Timer;
@@ -15,11 +11,8 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.annotation.PreDestroy;
-
-import javax.print.attribute.standard.Media;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,15 +24,14 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
 public class TriggerServer {
 
     private static final int SERVER_PORT = 8080;
-    private static final long LOCKOUT_PERIOD = 10000L;
+    private static final long LOCKOUT_PERIOD = 7000L;
 
-    private PiPulser ppulse = new PiPulser();
+    //private PiPulser ppulse = new PiPulser();
     private Server server = null;
 
     private UUID currentUuid = UUID.randomUUID();
@@ -61,7 +53,7 @@ public class TriggerServer {
         resource_handler.setWelcomeFiles(new String[] { "home.html" });
         resource_handler.setResourceBase("src/main/webapp");
 
-        ContextHandler context = new ContextHandler("/");
+        ContextHandler context = new ContextHandler("/web");
         context.setHandler(resource_handler);
 
         ContextHandler contextFR = new ContextHandler("/accept");
@@ -77,7 +69,7 @@ public class TriggerServer {
         context5.setHandler(new SubTriggerHandler());
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers(new Handler[] { context, contextFR, context3, context4, context5, new DefaultHandler() });
+        contexts.setHandlers(new Handler[] { context, contextFR, context3, context4, context5 });
 
         server.setHandler(contexts);
     }
@@ -158,9 +150,9 @@ public class TriggerServer {
             lockTimer.schedule(new LockoutTask(), 0L);
 
             Utils.getLogger().info("Accept request received");
-            ppulse.sendTurnstileSequence();
+            //ppulse.sendTurnstileSequence();
             //Toolkit.getDefaultToolkit().beep();
-            //playSound();
+            playSound();
 
             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             request.setHandled(true);
@@ -169,7 +161,7 @@ public class TriggerServer {
     
     private void playSound() {
         try {
-            Runtime.getRuntime().exec("afplay //Users//mnilsen//Downloads//Doorbell-SoundBible.com-516741062.wav");
+            Runtime.getRuntime().exec("afplay doorbell.wav");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -197,9 +189,11 @@ public class TriggerServer {
             if (uuids == null || uuids.length == 0) {
                 //  No UUID parameter, return error
                 httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                Utils.getLogger().info(String.format("No UUID in polling request"));
+                request.setHandled(true);
                 return;
             }
-            
+            Utils.getLogger().info(String.format("Polling with UUID %s",uuids[0]));
             //  If locked, wait
             if (locked.get()) {
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -212,7 +206,7 @@ public class TriggerServer {
             {
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             }
-
+            request.setHandled(true);
             
         }
     }
@@ -266,6 +260,6 @@ public class TriggerServer {
     
     @PreDestroy
     public void preDestroy() {
-        if(this.ppulse != null) this.ppulse.preDestroy();
+        //if(this.ppulse != null) this.ppulse.preDestroy();
     }
 }

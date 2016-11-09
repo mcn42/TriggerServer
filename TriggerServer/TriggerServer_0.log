@@ -792,3 +792,113 @@ Nov 03, 2016 11:58:20 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler han
 INFO: Locked, Accept request ignored
 Nov 03, 2016 11:58:20 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
 INFO: Locked, Accept request ignored
+Nov 08, 2016 10:08:59 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 10:08:59 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 10:09:31 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:09:33 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Locked, Accept request ignored
+Nov 08, 2016 10:09:42 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:09:46 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Locked, Accept request ignored
+Nov 08, 2016 10:10:14 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:10:16 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Locked, Accept request ignored
+Nov 08, 2016 10:13:30 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 10:13:30 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 10:14:02 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:14:08 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Locked, Accept request ignored
+Nov 08, 2016 10:15:09 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:15:10 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Locked, Accept request ignored
+Nov 08, 2016 10:16:47 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 10:16:47 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 10:17:20 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:17:28 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:18:51 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 10:20:27 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 10:20:27 AM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 10:20:39 AM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 2:30:22 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 2:30:22 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 2:39:15 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 2:39:15 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 2:40:36 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 2:44:02 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 2:44:52 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 2:45:31 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 3:07:32 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 3:07:32 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 3:09:00 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 3:15:11 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Base directory '/Users/michaeln/jdeveloper/mywork/TriggerServer/TriggerServer/.'
+Nov 08, 2016 3:15:11 PM org.mtahq.pfc.turnstile.TriggerServer start
+INFO: Server is starting...
+Nov 08, 2016 3:15:18 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:19 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:20 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:21 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:22 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:23 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:24 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:25 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received
+Nov 08, 2016 3:15:25 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:26 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:27 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:28 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:29 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:30 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:31 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:32 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:15:33 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: No UUID in polling request
+Nov 08, 2016 3:16:08 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: Polling with UUID 4a3c5cc0-834c-4b97-b4e1-85e8fa7ce11c
+Nov 08, 2016 3:16:16 PM org.mtahq.pfc.turnstile.TriggerServer$PollingHandler handle
+INFO: Polling with UUID 4a3c5cc0-834c-4b97-b4e1-85e8fa7ce11c
+Nov 08, 2016 3:16:22 PM org.mtahq.pfc.turnstile.TriggerServer$AcceptHandler handle
+INFO: Accept request received

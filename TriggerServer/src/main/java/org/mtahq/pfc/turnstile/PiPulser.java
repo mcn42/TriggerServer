@@ -47,10 +47,16 @@ public class PiPulser {
     }
     
     public void sendTurnstileSequence() {
-        if(this.fareboxMode) throw new RuntimeException("Cannot send Trunstile sequence in Farebox mode");
+        if(this.fareboxMode) throw new RuntimeException("Cannot send Turnstile sequence in Farebox mode");
         acceptPin.pulse(ACCEPT_PULSE_WIDTH_MILLIS, true); // set second argument to 'true' use a blocking call
         Utils.sleep(INTER_PULSE_GAP_MILLIS);
         bankedPin.pulse(BANKED_PULSE_WIDTH_MILLIS, true);
+    }
+    
+    public void sendFareboxSequence() {
+        if(!this.fareboxMode) throw new RuntimeException("Cannot send Farebox sequence in Turnstile mode");
+        this.greenLedPin.pulse(GREEN_LED_PULSE_WIDTH_MILLIS,false);
+        this.beeperPin.pulse(BEEPER_PULSE_WIDTH_MILLIS,true);
     }
     
     @PreDestroy
