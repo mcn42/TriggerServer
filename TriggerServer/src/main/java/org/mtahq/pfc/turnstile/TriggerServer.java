@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeSet;
@@ -43,6 +45,9 @@ public class TriggerServer {
 
     public TriggerServer() {
         super();
+        Locale.setDefault(new Locale("en", "US"));
+        TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
+        Utils.getLogger().info("Setting Time Zone: " + TimeZone.getDefault().getDisplayName());
         setup();
     }
 
@@ -148,7 +153,7 @@ public class TriggerServer {
             request.setHandled(true);
         }
     }
-    
+
     private void playSound() {
         try {
             Runtime.getRuntime().exec("afplay doorbell.wav");
@@ -174,7 +179,7 @@ public class TriggerServer {
         @Override
         public void handle(String string, Request request, HttpServletRequest httpServletRequest,
                            HttpServletResponse httpServletResponse) throws IOException, ServletException {
-            
+
             String[] uuids = httpServletRequest.getParameterValues("uuid");
             if (uuids == null || uuids.length == 0) {
                 //  No UUID parameter, return error
@@ -183,7 +188,7 @@ public class TriggerServer {
                 request.setHandled(true);
                 return;
             }
-            Utils.getLogger().info(String.format("Polling with UUID %s",uuids[0]));
+            Utils.getLogger().info(String.format("Polling with UUID %s", uuids[0]));
             //  If locked, wait
             if (locked.get()) {
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -197,7 +202,7 @@ public class TriggerServer {
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             }
             request.setHandled(true);
-            
+
         }
     }
 
@@ -247,7 +252,7 @@ public class TriggerServer {
             locked.lazySet(false);
         }
     }
-    
+
     @PreDestroy
     public void preDestroy() {
         //if(this.ppulse != null) this.ppulse.preDestroy();
