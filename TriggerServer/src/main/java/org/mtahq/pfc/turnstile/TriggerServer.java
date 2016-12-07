@@ -31,9 +31,9 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 public class TriggerServer {
 
     private static final int SERVER_PORT = 8080;
-    private static final long LOCKOUT_PERIOD = 7000L;
+    private static final long LOCKOUT_PERIOD = 6000L;
 
-    private PiPulser ppulse = new PiPulser(true);
+    private PiPulser ppulse = null;
     private Server server = null;
 
     private UUID currentUuid = UUID.randomUUID();
@@ -43,8 +43,10 @@ public class TriggerServer {
 
     private String supervisorUrl = null;
 
-    public TriggerServer() {
+    public TriggerServer(boolean fareboxMode) {
         super();
+        
+        ppulse = new PiPulser(fareboxMode);
         Locale.setDefault(new Locale("en", "US"));
         TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
         Utils.getLogger().info("Setting Time Zone: " + TimeZone.getDefault().getDisplayName());
@@ -54,9 +56,10 @@ public class TriggerServer {
     private void setup() {
         server = new Server(SERVER_PORT);
         ResourceHandler resource_handler = new ResourceHandler();
+        resource_handler.setResourceBase("./webapp");
         resource_handler.setDirectoriesListed(true);
         resource_handler.setWelcomeFiles(new String[] { "home.html" });
-        resource_handler.setResourceBase("src/main/webapp");
+        
 
         ContextHandler context = new ContextHandler("/web");
         context.setHandler(resource_handler);
@@ -82,6 +85,7 @@ public class TriggerServer {
     public void start() {
         try {
             this.changeUUID();
+            Utils.getLogger().info(String.format("Starting in %s mode",this.ppulse.isFareboxMode()?"Farebox":"Turnstile"));
             File f = new File(".");
             Utils.getLogger().info(String.format("Base directory '%s'", f.getAbsolutePath()));
             Utils.getLogger().info("Server is starting...");
@@ -111,10 +115,21 @@ public class TriggerServer {
     }
 
     public static void main(String[] args) {
-        TriggerServer triggerServer = new TriggerServer();
+        boolean farebox = true;
+        //  Parameter 1, if present, is 'true' or 'false' for Farebox mode, default is true
         if (args.length > 0) {
-            triggerServer.setSupervisorUrl(args[0]);
+            farebox = args[0].equalsIgnoreCase("true");            
         }
+        
+        
+        TriggerServer triggerServer = new TriggerServer(farebox);
+        
+        //  Parameter 2, if present, is the Supervisor URL, set subordinate mode to true, default is NULL/false
+        if (args.length > 1) {
+            triggerServer.setSupervisorUrl(args[1]);
+            Utils.getLogger().info(String.format("Starting in Subordinate mode with Supervisor: %s",args[0]));
+        }
+        
         triggerServer.start();
     }
 
@@ -191,14 +206,17 @@ public class TriggerServer {
             Utils.getLogger().info(String.format("Polling with UUID %s", uuids[0]));
             //  If locked, wait
             if (locked.get()) {
+                Utils.getLogger().info(String.format("Polled: lockout"));
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             } else
             //  If UUID is in uuidSet, the token is LIVE, so  we return a "No Content" code
             if (uuidSet.contains(uuids[0])) {
+                Utils.getLogger().info(String.format("Polled: UUID %s is LIVE",currentUuid.toString()));
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             } else
             //  UUID is not found, token expended, return OK
             {
+                Utils.getLogger().info(String.format("Polled:  UUID %s is expired",currentUuid.toString()));
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             }
             request.setHandled(true);

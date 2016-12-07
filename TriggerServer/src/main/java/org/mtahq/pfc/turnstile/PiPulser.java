@@ -14,8 +14,8 @@ public class PiPulser {
     private static final long BANKED_PULSE_WIDTH_MILLIS = 50;
     private static final long INTER_PULSE_GAP_MILLIS = 100;
     
-    private static final long GREEN_LED_PULSE_WIDTH_MILLIS = 1000L;
-    private static final long BEEPER_PULSE_WIDTH_MILLIS = 500L;
+    private static final long GREEN_LED_PULSE_WIDTH_MILLIS = 750L;
+    private static final long BEEPER_PULSE_WIDTH_MILLIS = 1500L;
     
     private static final Pin ACCEPT_PIN_ID = RaspiPin.GPIO_04;
     private static final Pin BANKED_PIN_ID = RaspiPin.GPIO_05;
@@ -29,11 +29,6 @@ public class PiPulser {
     private boolean fareboxMode = false;
     
     private final GpioController gpio = GpioFactory.getInstance();
-        
-    public PiPulser() {
-        super();
-        setUpTurnstileMode();
-    }
     
     public PiPulser(boolean fareboxMode) {
         super();
@@ -43,7 +38,7 @@ public class PiPulser {
         } else {
             this.setUpTurnstileMode();
         }
-        
+        Utils.getLogger().info(String.format("Starting in %s mode",fareboxMode?"Farebox":"Turnstile"));
     }
     
     public void sendTurnstileSequence() {
@@ -58,7 +53,12 @@ public class PiPulser {
         this.greenLedPin.pulse(GREEN_LED_PULSE_WIDTH_MILLIS,false);
         this.beeperPin.pulse(BEEPER_PULSE_WIDTH_MILLIS,true);
     }
-    
+
+
+    public boolean isFareboxMode() {
+        return fareboxMode;
+    }
+
     @PreDestroy
     public void preDestroy() {
         if(this.gpio != null) this.gpio.shutdown();
