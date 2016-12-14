@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.text.DateFormat;
+
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
@@ -40,12 +43,13 @@ public class TriggerServer {
     private Set<String> uuidSet = new TreeSet<String>();
     private AtomicBoolean locked = new AtomicBoolean(false);
     private Timer lockTimer = new Timer();
+    private boolean fareboxMode = false;
 
     private String supervisorUrl = null;
 
     public TriggerServer(boolean fareboxMode) {
         super();
-        
+        this.fareboxMode = fareboxMode;
         ppulse = new PiPulser(fareboxMode);
         Locale.setDefault(new Locale("en", "US"));
         TimeZone.setDefault(TimeZone.getTimeZone("America/New_York"));
@@ -59,7 +63,7 @@ public class TriggerServer {
         resource_handler.setResourceBase("./webapp");
         resource_handler.setDirectoriesListed(true);
         resource_handler.setWelcomeFiles(new String[] { "home.html" });
-        
+
 
         ContextHandler context = new ContextHandler("/web");
         context.setHandler(resource_handler);
@@ -76,8 +80,11 @@ public class TriggerServer {
         ContextHandler context5 = new ContextHandler("/subtrigger");
         context5.setHandler(new SubTriggerHandler());
 
+        ContextHandler context6 = new ContextHandler("/status");
+        context6.setHandler(new StatusHandler());
+
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers(new Handler[] { context, contextFR, context3, context4, context5 });
+        contexts.setHandlers(new Handler[] { context, contextFR, context3, context4, context5, context6 });
 
         server.setHandler(contexts);
     }
@@ -85,7 +92,8 @@ public class TriggerServer {
     public void start() {
         try {
             this.changeUUID();
-            Utils.getLogger().info(String.format("Starting in %s mode",this.ppulse.isFareboxMode()?"Farebox":"Turnstile"));
+            Utils.getLogger()
+                .info(String.format("Starting in %s mode", this.ppulse.isFareboxMode() ? "Farebox" : "Turnstile"));
             File f = new File(".");
             Utils.getLogger().info(String.format("Base directory '%s'", f.getAbsolutePath()));
             Utils.getLogger().info("Server is starting...");
@@ -118,18 +126,18 @@ public class TriggerServer {
         boolean farebox = true;
         //  Parameter 1, if present, is 'true' or 'false' for Farebox mode, default is true
         if (args.length > 0) {
-            farebox = args[0].equalsIgnoreCase("true");            
+            farebox = args[0].equalsIgnoreCase("true");
         }
-        
-        
+
+
         TriggerServer triggerServer = new TriggerServer(farebox);
-        
+
         //  Parameter 2, if present, is the Supervisor URL, set subordinate mode to true, default is NULL/false
         if (args.length > 1) {
             triggerServer.setSupervisorUrl(args[1]);
-            Utils.getLogger().info(String.format("Starting in Subordinate mode with Supervisor: %s",args[0]));
+            Utils.getLogger().info(String.format("Starting in Subordinate mode with Supervisor: %s", args[0]));
         }
-        
+
         triggerServer.start();
     }
 
@@ -159,7 +167,11 @@ public class TriggerServer {
             lockTimer.schedule(new LockoutTask(), 0L);
 
             Utils.getLogger().info("Accept request received");
-            ppulse.sendFareboxSequence();
+            if (fareboxMode) {
+                ppulse.sendFareboxSequence();
+            } else {
+                ppulse.sendTurnstileSequence();
+            }
             changeUUID();
             //Toolkit.getDefaultToolkit().beep();
             //playSound();
@@ -211,12 +223,12 @@ public class TriggerServer {
             } else
             //  If UUID is in uuidSet, the token is LIVE, so  we return a "No Content" code
             if (uuidSet.contains(uuids[0])) {
-                Utils.getLogger().info(String.format("Polled: UUID %s is LIVE",currentUuid.toString()));
+                Utils.getLogger().info(String.format("Polled: UUID %s is LIVE", currentUuid.toString()));
                 httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
             } else
             //  UUID is not found, token expended, return OK
             {
-                Utils.getLogger().info(String.format("Polled:  UUID %s is expired",currentUuid.toString()));
+                Utils.getLogger().info(String.format("Polled:  UUID %s is expired", currentUuid.toString()));
                 httpServletResponse.setStatus(HttpServletResponse.SC_OK);
             }
             request.setHandled(true);
@@ -268,6 +280,35 @@ public class TriggerServer {
             } catch (InterruptedException e) {
             }
             locked.lazySet(false);
+        }
+    }
+
+    private DateFormat df = DateFormat.getDateTimeInstance();
+
+    class StatusHandler extends AbstractHandler {
+
+        @Override
+        public void handle(String string, Request request, HttpServletRequest httpServletRequest,
+                           HttpServletResponse httpServletResponse) throws IOException, ServletException {
+            String dt = df.format(new Date());
+            StringBuilder buff = new StringBuilder();
+            buff.append("<!DOCTYPE html><html><head><link rel='stylesheet' type=te'txt/css' href='web/status.css'></head><body><h1>Server Status Page</h1>")
+                .append(String.format("<div><p>The Server is running</p><p>Generated: %s</p></div>", dt))
+                .append("<div><h2>Info</h2><table>");
+            String row = String.format("<tr><td>%s</td><td>%s</td></tr>", "Farebox mode", ppulse.isFareboxMode());
+            buff.append(row);
+            row = String.format("<tr><td>%s</td><td>%s</td></tr>", "UUID", currentUuid);
+            buff.append(row);
+            row = String.format("<tr><td>%s</td><td>%s</td></tr>", "Locked out", locked.get());
+            buff.append(row);
+            row = String.format("<tr><td>%s</td><td>%s</td></tr>", "Web server", server.getState());
+            buff.append(row);
+            buff.append("</table></div></body></html>");
+
+            httpServletResponse.getWriter().write(buff.toString());
+
+            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            request.setHandled(true);
         }
     }
 
